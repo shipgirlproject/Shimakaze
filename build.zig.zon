@@ -2,13 +2,13 @@
     .name = "Shimakaze",
     .version = "0.0.0",
     .dependencies = .{
-        .websocket = .{
-            .url = "https://github.com/karlseguin/websocket.zig/archive/aa77656ec974b73b614f485d0bab4d1c62b826a1.tar.gz",
-            .hash = "1220e88b7e373e5e0d1f2bf12ecd72219ac1d8d0d4f209154a61762d70634faece65",
-        },
         .libxev = .{
-            .url = "https://github.com/mitchellh/libxev/archive/a5f8b9851c18d93a79a154004fb0393a1ec55c65.tar.gz",
-            .hash = "1220589dfd60060857bfcee53b0ee0e4175f764ae22d54e46054e2f81b63af1f6636",
+            .url = "https://github.com/mitchellh/libxev/archive/00ed7d743d04d303c889eb3f66fd175acaf6dd0d.tar.gz",
+            .hash = "1220aba590c9761892e6a5e97ba817d032d9718abe384f891d7b492cf58e85708ce8",
+        },
+        .websocket = .{
+            .url = "https://github.com/karlseguin/websocket.zig/archive/4e148e7fb7eb506790f6e1c1aaa34e91b68d61a3.tar.gz",
+            .hash = "12202159bd17c3b64dceb0b6a21d52275fac3618241304d65128e0b9df0d275a7215",
         },
     },
     .paths = .{""},

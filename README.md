@@ -7,6 +7,8 @@ alpha quality software
 
 oh yeah the libraries that this depends on are also alpha quality software
 
+btw the programming language used is also alpha quality (zig master)
+
 also this doesnt build at all
 
 ## Dependencies
