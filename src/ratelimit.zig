@@ -8,6 +8,7 @@ pub const wait_time: i64 = 60;
 pub const max_req_amount: u8 = 100;
 
 pub const Ratelimiter = struct {
+    // time to refresh at, no loops/ticking required
     refresh_time: i64,
     counter: u8,
 
