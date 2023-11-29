@@ -13,7 +13,6 @@ also this doesnt build at all
 
 ## Dependencies
  - websocket.zig - websocket client
- - libxev - timers and event loop
 
 ## Outgoing Payloads Handled
  - Identify
