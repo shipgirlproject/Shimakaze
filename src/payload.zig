@@ -5,7 +5,7 @@ const string = @import("./util.zig").string;
 const codes = @import("./codes.zig");
 const Opcodes = codes.Opcodes;
 const Event = codes.Event;
-const objects = @import("/objects.zig");
+const objects = @import("./objects.zig");
 
 pub const EventPayload = struct {
     op: Opcodes,
@@ -77,29 +77,48 @@ pub const ReceivePayload = struct {
     },
 };
 
-fn parsePayload(T: type, allocator: mem.Allocator, payload: string) !T {
+fn parsePayload(comptime T: type, allocator: mem.Allocator, payload: string) !T {
     const parsed = try json.parseFromSlice(struct { d: T }, allocator, payload, .{ .ignore_unknown_fields = true });
     defer parsed.deinit();
     return parsed.value.d;
 }
 
-pub fn parseRecievePayload(allocator: mem.Allocator, payload: string) !ReceivePayload {
-    const event = try parseEvent(allocator, payload);
-    return switch (event.op) {
-        .Dispatch => switch (event.t) {},
-        .Hello => ReceivePayload{
-            .op = event.op,
-            .payload = .{
-                .hello = try parsePayload(HelloPayload, allocator, payload),
-            },
-        },
-        else => ReceivePayload{
-            .op = event.op,
-            .payload = .{
-                .other = try parsePayload(string, allocator, payload),
-            },
-        },
-    };
+fn parseOther(allocator: mem.Allocator, payload: string) !string {
+    return parsePayload(string, allocator, payload);
+}
+
+fn parseHello(allocator: mem.Allocator, payload: string) !HelloPayload {
+    return parsePayload(HelloPayload, allocator, payload);
+}
+
+fn parseReady(allocator: mem.Allocator, payload: string) !ReadyPayload {
+    return parsePayload(ReadyPayload, allocator, payload);
+}
+
+fn parseReconnect(allocator: mem.Allocator, payload: string) !IgnoredPayload {
+    _ = payload;
+    _ = allocator;
+    return null;
+}
+
+fn parseInvalidSession(allocator: mem.Allocator, payload: string) !InvalidSessionPayload {
+    return parsePayload(InvalidSessionPayload, allocator, payload);
+}
+
+test "parse hello payload" {
+    const testing = std.testing;
+
+    const payload =
+        \\ {
+        \\     "op": 10,
+        \\     "d": {
+        \\         "heartbeat_interval": 45000
+        \\     }
+        \\ }
+    ;
+
+    const parsed = try parseHello(testing.allocator, payload);
+    try testing.expect(parsed.heartbeat_interval == 45000);
 }
 
 test "stringify resume payload" {}
