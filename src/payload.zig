@@ -66,7 +66,8 @@ pub const InvalidSessionPayload = bool;
 pub const IgnoredPayload = @TypeOf(null);
 
 pub const ReceivePayload = struct {
-    op: Opcodes,
+    op: ?Opcodes,
+    event: ?Event,
     payload: union {
         hello: HelloPayload,
         ready: ReadyPayload,
