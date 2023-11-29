@@ -24,10 +24,8 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    const dep_libxev = b.dependency("libxev", .{ .target = target, .optimize = optimize });
     const dep_websocket = b.dependency("websocket", .{ .target = target, .optimize = optimize });
 
-    exe.addModule("xev", dep_libxev.module("xev"));
     exe.addModule("websocket", dep_websocket.module("websocket"));
 
     // This declares intent for the executable to be installed into the
@@ -66,7 +64,6 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    unit_tests.addModule("xev", dep_libxev.module("xev"));
     unit_tests.addModule("websocket", dep_websocket.module("websocket"));
 
     const run_unit_tests = b.addRunArtifact(unit_tests);

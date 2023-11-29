@@ -2,10 +2,6 @@
     .name = "Shimakaze",
     .version = "0.0.0",
     .dependencies = .{
-        .libxev = .{
-            .url = "https://github.com/mitchellh/libxev/archive/00ed7d743d04d303c889eb3f66fd175acaf6dd0d.tar.gz",
-            .hash = "1220aba590c9761892e6a5e97ba817d032d9718abe384f891d7b492cf58e85708ce8",
-        },
         .websocket = .{
             .url = "https://github.com/karlseguin/websocket.zig/archive/4e148e7fb7eb506790f6e1c1aaa34e91b68d61a3.tar.gz",
             .hash = "12202159bd17c3b64dceb0b6a21d52275fac3618241304d65128e0b9df0d275a7215",
