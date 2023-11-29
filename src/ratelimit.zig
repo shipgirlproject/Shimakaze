@@ -11,7 +11,7 @@ pub const Ratelimiter = struct {
     refresh_time: i64,
     counter: u8,
 
-    pub fn init() !Ratelimiter {
+    pub fn init() Ratelimiter {
         return Ratelimiter{
             .refresh_time = time.timestamp() + max_req_amount,
             .counter = max_req_amount,
@@ -33,4 +33,12 @@ pub const Ratelimiter = struct {
     }
 };
 
-test "ratelimiter" {}
+test "ratelimiter" {
+    const testing = std.testing;
+
+    var limiter = Ratelimiter.init();
+    try testing.expect(limiter.refresh_time == time.timestamp() + max_req_amount);
+
+    const amt = try limiter.remove();
+    try testing.expect(amt == max_req_amount - 1);
+}
