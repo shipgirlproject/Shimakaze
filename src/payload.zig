@@ -65,18 +65,6 @@ pub const InvalidSessionPayload = bool;
 
 pub const IgnoredPayload = @TypeOf(null);
 
-pub const ReceivePayload = struct {
-    op: ?Opcodes,
-    event: ?Event,
-    payload: union {
-        hello: HelloPayload,
-        ready: ReadyPayload,
-        reconnect: IgnoredPayload,
-        invalid_session: InvalidSessionPayload,
-        other: string,
-    },
-};
-
 fn parsePayload(comptime T: type, allocator: mem.Allocator, payload: string) !T {
     const parsed = try json.parseFromSlice(struct { d: T }, allocator, payload, .{ .ignore_unknown_fields = true });
     defer parsed.deinit();
