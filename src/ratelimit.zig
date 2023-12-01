@@ -14,14 +14,14 @@ pub const Ratelimiter = struct {
 
     pub fn init() Ratelimiter {
         return Ratelimiter{
-            .refresh_time = time.timestamp() + max_req_amount,
+            .refresh_time = time.timestamp() + wait_time,
             .counter = max_req_amount,
         };
     }
 
     pub fn remove(self: *Ratelimiter) !u8 {
         if (time.timestamp() > self.refresh_time) {
-            self.refresh_time = time.timestamp() + max_req_amount;
+            self.refresh_time = time.timestamp() + wait_time;
             self.counter = max_req_amount;
         }
 
