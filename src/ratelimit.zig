@@ -38,7 +38,7 @@ test "ratelimiter" {
     const testing = std.testing;
 
     var limiter = Ratelimiter.init();
-    try testing.expect(limiter.refresh_time == time.timestamp() + max_req_amount);
+    try testing.expect(limiter.refresh_time == time.timestamp() + wait_time);
 
     const amt = try limiter.remove();
     try testing.expect(amt == max_req_amount - 1);
