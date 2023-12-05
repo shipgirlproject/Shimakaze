@@ -41,9 +41,7 @@ test "parse event payload" {
 }
 
 // Receive events
-pub const DispatchPayload = struct {
-    sequence: u16,
-};
+pub const DispatchPayload = string;
 
 pub const HelloPayload = struct {
     heartbeat_interval: u16,
