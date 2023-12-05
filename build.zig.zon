@@ -3,8 +3,8 @@
     .version = "0.0.0",
     .dependencies = .{
         .websocket = .{
-            .url = "https://github.com/karlseguin/websocket.zig/archive/4e148e7fb7eb506790f6e1c1aaa34e91b68d61a3.tar.gz",
-            .hash = "12202159bd17c3b64dceb0b6a21d52275fac3618241304d65128e0b9df0d275a7215",
+            .url = "https://github.com/karlseguin/websocket.zig/archive/705bd3e91846d38c681aee4943ccef834349b5d9.tar.gz",
+            .hash = "12208e642061c6feae9227812d7e086eba4e3e2273ff18e76e0edb8b6f7ba7d83af0",
         },
     },
     .paths = .{""},
