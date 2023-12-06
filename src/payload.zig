@@ -11,7 +11,7 @@ pub const EventPayload = struct {
     op: Opcodes,
     // we ignore d until we know what type of op it is
     // d: null,
-    s: ?u16,
+    s: ?u32,
     t: ?Event,
 };
 
@@ -63,31 +63,31 @@ pub const InvalidSessionPayload = bool;
 
 pub const IgnoredPayload = @TypeOf(null);
 
-fn parsePayload(comptime T: type, allocator: mem.Allocator, payload: string) !T {
+pub fn parsePayload(comptime T: type, allocator: mem.Allocator, payload: string) !T {
     const parsed = try json.parseFromSlice(struct { d: T }, allocator, payload, .{ .ignore_unknown_fields = true });
     defer parsed.deinit();
     return parsed.value.d;
 }
 
-fn parseOther(allocator: mem.Allocator, payload: string) !string {
+pub fn parseOther(allocator: mem.Allocator, payload: string) !string {
     return parsePayload(string, allocator, payload);
 }
 
-fn parseHello(allocator: mem.Allocator, payload: string) !HelloPayload {
+pub fn parseHello(allocator: mem.Allocator, payload: string) !HelloPayload {
     return parsePayload(HelloPayload, allocator, payload);
 }
 
-fn parseReady(allocator: mem.Allocator, payload: string) !ReadyPayload {
+pub fn parseReady(allocator: mem.Allocator, payload: string) !ReadyPayload {
     return parsePayload(ReadyPayload, allocator, payload);
 }
 
-fn parseReconnect(allocator: mem.Allocator, payload: string) !IgnoredPayload {
+pub fn parseReconnect(allocator: mem.Allocator, payload: string) !IgnoredPayload {
     _ = payload;
     _ = allocator;
     return null;
 }
 
-fn parseInvalidSession(allocator: mem.Allocator, payload: string) !InvalidSessionPayload {
+pub fn parseInvalidSession(allocator: mem.Allocator, payload: string) !InvalidSessionPayload {
     return parsePayload(InvalidSessionPayload, allocator, payload);
 }
 
@@ -105,6 +105,88 @@ test "parse hello payload" {
 
     const parsed = try parseHello(testing.allocator, payload);
     try testing.expect(parsed.heartbeat_interval == 45000);
+}
+
+// send events
+pub const IdentifyPayload = struct {
+    token: string,
+    properties: struct {
+        os: string,
+        browser: string,
+        device: string,
+    },
+    compress: ?bool,
+    large_threshold: ?u8,
+    shard: ?[2]u8,
+    presence: ?PresenceUpdatePayload,
+    intents: u32,
+};
+
+pub const ResumePayload = struct {
+    token: string,
+    session_id: string,
+    seq: ?u32,
+};
+
+pub const HeartbeatPayload = ?u32;
+
+pub const RequestGuildMembersPayload = struct {
+    guild_id: string,
+    query: ?string,
+    limit: u32,
+    presences: ?bool,
+    user_ids: ?[]string,
+    nonce: ?string,
+};
+
+pub const VoiceStateUpdatePayload = struct {
+    guild_id: string,
+    channel_id: ?string,
+    self_mute: bool,
+    self_deaf: bool,
+};
+
+pub const PresenceUpdatePayload = struct {
+    since: ?i64,
+    activities: []struct {
+        name: string,
+        state: ?string,
+        type: u8,
+        url: ?string,
+    },
+    status: string,
+    afk: bool,
+};
+
+pub fn stringifyEvent(allocator: mem.Allocator, opcode: Opcodes, payload: anytype) !string {
+    const value = .{ .op = @intFromEnum(opcode), .d = payload };
+    return json.stringifyAlloc(allocator, value, .{});
+}
+
+test "stringify event payload" {}
+
+pub fn stringifyIdentify(allocator: mem.Allocator, payload: IdentifyPayload) !string {
+    return stringifyEvent(allocator, Opcodes.Identify, payload);
+}
+
+pub fn strinigfyResume(allocator: mem.Allocator, payload: ResumePayload) !string {
+    return stringifyEvent(allocator, Opcodes.Resume, payload);
+}
+
+pub fn stringifyHeartbeat(allocator: mem.Allocator, payload: HeartbeatPayload) !string {
+    return stringifyEvent(allocator, Opcodes.Heartbeat, payload);
+}
+
+pub fn stringifyRequestGuildMembers(allocator: mem.Allocator, payload: RequestGuildMembersPayload) !string {
+    return stringifyEvent(allocator, Opcodes.RequestGuildMembers, payload);
+}
+
+pub fn stringifyVoiceStateUpdate(allocator: mem.Allocator, payload: VoiceStateUpdatePayload) !string {
+    return stringifyEvent(allocator, Opcodes.VoiceStateUpdate, payload);
+}
+
+pub fn stringifyPresenceUpdate(allocator: mem.Allocator, payload: PresenceUpdatePayload) !string {
+    return stringifyEvent(allocator, Opcodes.PresenceUpdate, payload);
 }
 
 test "stringify resume payload" {}
