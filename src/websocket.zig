@@ -30,5 +30,7 @@ pub const Handler = struct {
         return self.client.write(data);
     }
 
-    pub fn close(_: Handler) void {}
+    pub fn close(self: *Handler) void {
+        self.client.close();
+    }
 };
