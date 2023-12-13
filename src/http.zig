@@ -39,5 +39,8 @@ pub fn getGatewayBot(allocator: mem.Allocator, token: string) !GatewayInfo {
     });
     defer req.deinit();
 
-    return json.parseFromSlice(GatewayInfo, allocator, req.body, .{});
+    const parsed = try json.parseFromSlice(GatewayInfo, allocator, req.body, .{});
+    parsed.deinit();
+
+    return parsed;
 }
